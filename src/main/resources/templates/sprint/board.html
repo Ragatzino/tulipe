@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Sprint ' + ${sprint.name}">Sprint Board</title>
+    <style>
+        .board {
+            display: flex;
+            gap: 20px;
+        }
+        .column {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .task {
+            background: white;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        .userstory {
+            margin-bottom: 15px;
+        }
+        .userstory-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 th:text="'Sprint : ' + ${sprint.name}"></h1>
+
+<div class="board">
+    <!-- Colonne TODO -->
+    <div class="column">
+        <h2>📝 To Do</h2>
+        <div th:each="us : ${sprint.userStories}" class="userstory">
+            <div class="userstory-title" th:text="${us.title}"></div>
+            <div th:each="task : ${us.tasks}"
+                 th:if="${task.status == 'TODO'}"
+                 class="task">
+                <span th:text="${task.title}"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Colonne IN PROGRESS -->
+    <div class="column">
+        <h2>🚧 In Progress</h2>
+        <div th:each="us : ${sprint.userStories}" class="userstory">
+            <div class="userstory-title" th:text="${us.title}"></div>
+            <div th:each="task : ${us.tasks}"
+                 th:if="${task.status == 'IN_PROGRESS'}"
+                 class="task">
+                <span th:text="${task.title}"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Colonne DONE -->
+    <div class="column">
+        <h2>✅ Done</h2>
+        <div th:each="us : ${sprint.userStories}" class="userstory">
+            <div class="userstory-title" th:text="${us.title}"></div>
+            <div th:each="task : ${us.tasks}"
+                 th:if="${task.status == 'DONE'}"
+                 class="task">
+                <span th:text="${task.title}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

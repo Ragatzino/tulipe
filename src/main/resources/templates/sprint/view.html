@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sprint.subject} + ' - Tulipe'">Sprint</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .kanban {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .column {
+            flex: 1;
+            background: #f0f0f5;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .column h2 {
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .task {
+            background: #ffffff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            cursor: grab;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .task.dragging {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <h1 th:text="${sprint.subject}">Sprint</h1>
+</header>
+
+<div class="kanban">
+    <div class="column" id="TODO">
+        <h2>À faire</h2>
+        <div th:each="us : ${sprint.userStoriesDuSprint}">
+            <h3 th:text="${us.subject}">User Story</h3>
+            <div th:each="task : ${us.tasks}" th:if="${task.status}=='TODO'" class="task" th:attr="data-id=${task.id}" draggable="true" th:text="${task.subject}"></div>
+        </div>
+    </div>
+
+    <div class="column" id="IN_PROGRESS">
+        <h2>En cours</h2>
+        <div th:each="us : ${sprint.userStoriesDuSprint}">
+            <h3 th:text="${us.subject}">User Story</h3>
+            <div th:each="task : ${us.tasks}" th:if="${task.status}=='IN_PROGRESS'" class="task" th:attr="data-id=${task.id}" draggable="true" th:text="${task.subject}"></div>
+        </div>
+    </div>
+
+    <div class="column" id="DONE">
+        <h2>Terminé</h2>
+        <div th:each="us : ${sprint.userStoriesDuSprint}">
+            <h3 th:text="${us.subject}">User Story</h3>
+            <div th:each="task : ${us.tasks}" th:if="${task.status}=='DONE'" class="task" th:attr="data-id=${task.id}" draggable="true" th:text="${task.subject}"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let dragged = null;
+
+    document.querySelectorAll('.task').forEach(task => {
+        task.addEventListener('dragstart', e => {
+            dragged = task;
+            task.classList.add('dragging');
+        });
+
+        task.addEventListener('dragend', e => {
+            task.classList.remove('dragging');
+            dragged = null;
+        });
+    });
+
+    document.querySelectorAll('.column').forEach(column => {
+        column.addEventListener('dragover', e => {
+            e.preventDefault();
+        });
+
+        column.addEventListener('drop', e => {
+            e.preventDefault();
+            if(dragged) {
+                column.appendChild(dragged);
+                const taskId = dragged.getAttribute('data-id');
+                const newStatus = column.id;
+
+                fetch('/tasks/' + taskId + '/move?newStatus=' + newStatus, { method: 'POST' });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

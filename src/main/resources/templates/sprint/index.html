@@ -1,0 +1,12 @@
+<html>
+
+<div class="sprints-container">
+    <h2>Liste des Sprints</h2>
+    <ul>
+        <li th:each="sprint : ${sprints}">
+            <a th:href="@{'/sprints/' + ${sprint.id}}" th:text="${sprint.subject}">Sprint Name</a>
+        </li>
+    </ul>
+</div>
+
+</html>

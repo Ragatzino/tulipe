@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Créer un Sprint - Tulipe</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #2c3e50; }
+        form { max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
+        label { font-weight: bold; }
+        input[type="text"], input[type="datetime-local"] { padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px; background-color: #27ae60; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #2ecc71; }
+    </style>
+</head>
+<body>
+
+<h1>Créer un Sprint</h1>
+
+<form th:action="@{/sprints}" th:object="${sprint}" method="post">
+    <div>
+        <label for="subject">Nom du Sprint :</label>
+        <input type="text" id="subject" th:field="*{subject}" required>
+    </div>
+
+    <div>
+        <label for="dateDebut">Date de début :</label>
+        <input type="date" id="dateDebut" th:field="*{dateDebut}" required>
+    </div>
+
+
+    <div>
+        <label for="dateFin">Date de fin :</label>
+        <input type="date" id="dateFin" th:field="*{dateFin}" required>
+    </div>
+
+    <button type="submit">Créer</button>
+</form>
+
+</body>
+</html>

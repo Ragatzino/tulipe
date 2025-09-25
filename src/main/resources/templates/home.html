@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tulipe</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="header">
+    <img th:src="@{/images/tulipe.jpg}" alt="Tulipe Logo" class="logo">
+    <h1>Tulipe</h1>
+</header>
+
+<main class="container">
+    <section class="actions">
+        <a th:href="@{/sprints/new}" class="button-create">➕ Créer un Sprint</a>
+        <a th:href="@{/userstories/new}" class="button-create">➕ Créer une User Story</a>
+        <a th:href="@{/tasks/new}" class="button-create">➕ Créer une Tâche</a>
+    </section>
+
+    <section class="sprints" th:if="${sprints != null and !sprints.isEmpty()}">
+        <h2>Liste des Sprints</h2>
+        <ul>
+            <li th:each="sprint : ${sprints}">
+                <a th:href="@{'/sprints/' + ${sprint.id}}" th:text="${sprint.subject}">Sprint Name</a>
+            </li>
+        </ul>
+    </section>
+    <section class="userstories" th:if="${userStories != null and !userStories.isEmpty()}">
+        <h2>Liste des UserStory</h2>
+        <ul>
+            <li th:each="userstory : ${userStories}">
+                <a th:href="@{'/sprints/' + ${userstory.id}}" th:text="${userstory.subject}">Sprint Name</a>
+            </li>
+        </ul>
+    </section>
+    <section class="tasks" th:if="${tasks != null and !tasks.isEmpty()}">
+        <h2>Liste des Tâches</h2>
+        <ul>
+            <li th:each="tache : ${tasks}">
+                <a th:href="@{'/sprints/' + ${tache.id}}" th:text="${tache.subject}">Sprint Name</a>
+            </li>
+        </ul>
+    </section>
+</main>
+
+</body>
+</html>
