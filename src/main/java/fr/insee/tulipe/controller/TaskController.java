@@ -1,15 +1,13 @@
 package fr.insee.tulipe.controller;
 
+import fr.insee.tulipe.model.Sprint;
 import fr.insee.tulipe.model.Task;
 import fr.insee.tulipe.model.UserStory;
 import fr.insee.tulipe.service.TaskService;
 import fr.insee.tulipe.service.UserStoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,4 +37,26 @@ public class TaskController {
         taskService.save(task);
         return "redirect:/";
     }
+
+    @PostMapping("/{id}/move")
+    @ResponseBody
+    public void moveTask(@PathVariable Integer id, @RequestParam String newStatus) {
+        taskService.moveTask(id, newStatus);
+    }
+
+    @GetMapping("/")
+    public String viewTasks(Model model) {
+        List<Task> tasks = taskService.findAll();
+        model.addAttribute("tasks", tasks);
+        return "task/index";
+    }
+
+    @GetMapping("/{id}")
+    public String viewSprint(@PathVariable Integer id, Model model) {
+        Task task = taskService.findById(id);
+        model.addAttribute("task", task);
+        return "task/view";
+    }
+
+
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-
+    private final String nomApplication = "Tulipe local";
     private final SprintService sprintService;
     private final UserStoryService userStoryService;
     private final TaskService taskService;
@@ -31,6 +31,7 @@ public class HomeController {
         List<Sprint> sprints = sprintService.findAll(); // récupère tous les sprints
         List<UserStory> userStories = userStoryService.findAll();
         List<Task> tasks = taskService.findAll();
+        model.addAttribute("title",nomApplication);
         model.addAttribute("sprints", sprints);
         model.addAttribute("userStories", userStories);
         model.addAttribute("tasks", tasks);

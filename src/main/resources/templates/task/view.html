@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${userStory.subject}">User Story</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .userstory-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .userstory-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .userstory-description {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .userstory-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .add-task-section {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-task-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .add-task-form select {
+            flex: 1;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .add-task-form button {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tasks-kanban {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .task-column {
+            flex: 1;
+            background: #f0f0f5;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .task-column h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .task-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .task-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .task-status-todo { border-left: 4px solid #ffc107; }
+        .task-status-progress { border-left: 4px solid #17a2b8; }
+        .task-status-done { border-left: 4px solid #28a745; }
+
+        .no-tasks {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <h1>Détail User Story</h1>
+    <div>
+        <a th:href="@{/userstories/}" class="button">← Liste des User Stories</a>
+        <a th:href="@{/}" class="button">🏠 Accueil</a>
+    </div>
+</header>
+
+<main class="container">
+    <!-- ✅ En-tête avec infos de la User Story -->
+    <div class="userstory-header">
+        <div class="userstory-title" th:text="${userStory.subject}">User Story Title</div>
+        <div class="userstory-description" th:text="${userStory.description}" th:if="${userStory.description}">Description</div>
+        <div class="userstory-meta">
+            <span th:if="${userStory.priority}" th:text="'Priorité: ' + ${userStory.priority}">Priorité</span>
+            <span th:if="${userStory.sprint}" th:text="'Sprint: ' + ${userStory.sprint.subject}">Sprint</span>
+            <span th:unless="${userStory.sprint}">Aucun sprint assigné</span>
+        </div>
+    </div>
+
+    <!-- ✅ Section pour ajouter des tâches existantes -->
+    <div class="add-task-section" th:if="${availableTasks != null and !availableTasks.isEmpty()}">
+        <h3>Ajouter une tâche à cette User Story</h3>
+        <form class="add-task-form" th:action="@{'/userstories/' + ${userStory.id} + '/addTask'}" method="post">
+            <select name="taskId" required>
+                <option value="">-- Sélectionner une tâche --</option>
+                <option th:each="task : ${availableTasks}"
+                        th:value="${task.id}"
+                        th:text="${task.subject}">Tâche</option>
+            </select>
+            <button type="submit">➕ Ajouter</button>
+        </form>
+    </div>
+
+    <!-- ✅ Message si aucune tâche disponible -->
+    <div class="add-task-section" th:if="${availableTasks == null or availableTasks.isEmpty()}">
+        <a th:href="@{/tasks/new}">➕ Créer une nouvelle tâche</a>
+    </div>
+
+    <!-- ✅ Kanban des tâches de cette User Story -->
+    <div class="tasks-kanban" th:if="${userStory.tasks != null and !userStory.tasks.isEmpty()}">
+        <div class="task-column">
+            <h3>📝 À faire</h3>
+            <div th:each="task : ${userStory.tasks}"
+                 th:if="${task.status != null and task.status.name() == 'TODO'}"
+                 class="task-item task-status-todo">
+                <div class="task-title" th:text="${task.subject}">Titre tâche</div>
+                <div class="task-description" th:text="${task.description}" th:if="${task.description}">Description</div>
+            </div>
+            <div th:unless="${userStory.tasks.?[status != null and status.name() == 'TODO'].size() > 0}" class="no-tasks">
+                Aucune tâche à faire
+            </div>
+        </div>
+
+        <div class="task-column">
+            <h3>🔄 En cours</h3>
+            <div th:each="task : ${userStory.tasks}"
+                 th:if="${task.status != null and task.status.name() == 'IN_PROGRESS'}"
+                 class="task-item task-status-progress">
+                <div class="task-title" th:text="${task.subject}">Titre tâche</div>
+                <div class="task-description" th:text="${task.description}" th:if="${task.description}">Description</div>
+            </div>
+            <div th:unless="${userStory.tasks.?[status != null and status.name() == 'IN_PROGRESS'].size() > 0}" class="no-tasks">
+                Aucune tâche en cours
+            </div>
+        </div>
+
+        <div class="task-column">
+            <h3>✅ Terminé</h3>
+            <div th:each="task : ${userStory.tasks}"
+                 th:if="${task.status != null and task.status.name() == 'DONE'}"
+                 class="task-item task-status-done">
+                <div class="task-title" th:text="${task.subject}">Titre tâche</div>
+                <div class="task-description" th:text="${task.description}" th:if="${task.description}">Description</div>
+            </div>
+            <div th:unless="${userStory.tasks.?[status != null and status.name() == 'DONE'].size() > 0}" class="no-tasks">
+                Aucune tâche terminée
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

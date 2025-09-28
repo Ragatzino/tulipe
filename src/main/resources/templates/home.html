@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tulipe</title>
+    <title th:text="${title}">Tulipe</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
 <header class="header">
-    <img th:src="@{/images/tulipe.jpg}" alt="Tulipe Logo" class="logo">
-    <h1>Tulipe</h1>
+    <img th:src="@{/images/tulipe.jpg}" alt="Logo" class="logo">
+    <h1 th:text="${title}">Tulipe</h1>
 </header>
 
 <main class="container">
@@ -31,7 +31,8 @@
         <h2>Liste des UserStory</h2>
         <ul>
             <li th:each="userstory : ${userStories}">
-                <a th:href="@{'/sprints/' + ${userstory.id}}" th:text="${userstory.subject}">Sprint Name</a>
+                <a th:href="@{'/userstories/' + ${userstory.id}}" th:text="${userstory.subject}" >Sprint Name</a>
+                <div class="label-us" th:if="${userstory.sprint != null}" th:text="${userstory.sprint.subject}">test</div>
             </li>
         </ul>
     </section>
@@ -39,7 +40,7 @@
         <h2>Liste des Tâches</h2>
         <ul>
             <li th:each="tache : ${tasks}">
-                <a th:href="@{'/sprints/' + ${tache.id}}" th:text="${tache.subject}">Sprint Name</a>
+                <a th:href="@{'/tasks/' + ${tache.id}}" th:text="${tache.subject}">Sprint Name</a>
             </li>
         </ul>
     </section>

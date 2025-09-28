@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Stories</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .userstory-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .userstory-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .userstory-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .userstory-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .userstory-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .userstory-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .task-count {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .sprint-info {
+            font-style: italic;
+        }
+
+        .actions {
+            margin-top: 15px;
+        }
+
+        .view-btn {
+            background: #4caf50;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .view-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <img th:src="@{/images/tulipe.jpg}" alt="Logo" class="logo">
+    <h1>User Stories</h1>
+    <div>
+        <a th:href="@{/}" class="button">← Accueil</a>
+        <a th:href="@{/userstories/new}" class="button-create">➕ Nouvelle User Story</a>
+    </div>
+</header>
+
+<main class="container">
+    <div th:if="${userStories != null and !userStories.isEmpty()}" class="userstory-list">
+        <div th:each="us : ${userStories}" class="userstory-card">
+            <div class="userstory-title" th:text="${us.subject}">User Story Title</div>
+            <div class="userstory-description" th:text="${us.description}" th:if="${us.description}">Description</div>
+
+            <div class="userstory-meta">
+                <div>
+                    <span class="task-count" th:if="${us.tasks != null}"
+                          th:text="${us.tasks.size()} + ' tâche(s)'">0 tâches</span>
+                    <span class="task-count" th:unless="${us.tasks != null}">0 tâches</span>
+                </div>
+                <div class="sprint-info">
+                    <span th:if="${us.sprint != null}" th:text="'Sprint: ' + ${us.sprint.subject}">Sprint</span>
+                    <span th:unless="${us.sprint != null}">Pas de sprint</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a th:href="@{'/userstories/' + ${us.id}}" class="view-btn">👁️ Voir les tâches</a>
+            </div>
+        </div>
+    </div>
+
+    <div th:unless="${userStories != null and !userStories.isEmpty()}" class="no-content">
+        <p>Aucune User Story trouvée.</p>
+        <a th:href="@{/userstories/new}" class="button-create">➕ Créer la première User Story</a>
+    </div>
+</main>
+
+</body>
+</html>

@@ -3,12 +3,13 @@ package fr.insee.tulipe.model;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class UserStory extends ArtefactAgile{
     @OneToMany
-    List<Task> tasks;
+    List<Task> tasks = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     Priority priority;
 

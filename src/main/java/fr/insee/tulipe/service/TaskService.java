@@ -1,8 +1,10 @@
 package fr.insee.tulipe.service;
 
 import fr.insee.tulipe.exceptions.TaskNotFoundException;
+import fr.insee.tulipe.model.Sprint;
 import fr.insee.tulipe.model.Task;
 import fr.insee.tulipe.model.TaskStatus;
+import fr.insee.tulipe.model.UserStory;
 import fr.insee.tulipe.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

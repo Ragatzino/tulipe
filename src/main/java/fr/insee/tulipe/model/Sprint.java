@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,5 +55,13 @@ public class Sprint extends ArtefactAgile{
     @Override
     public int hashCode() {
         return Objects.hashCode(getDateDebut());
+    }
+
+    public void addUserStory(UserStory userStory) {
+        if (this.userStoriesDuSprint == null) {
+            this.userStoriesDuSprint = new ArrayList<>();
+        }
+        this.userStoriesDuSprint.add(userStory);
+        userStory.setSprint(this);
     }
 }

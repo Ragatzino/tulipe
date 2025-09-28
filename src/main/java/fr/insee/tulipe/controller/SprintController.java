@@ -70,10 +70,6 @@ public class SprintController {
         sprintService.save(sprint);
         return "redirect:/";
     }
-    @PostMapping("/tasks/{id}/move")
-    @ResponseBody
-    public void moveTask(@PathVariable Integer id, @RequestParam String newStatus) {
-        taskService.moveTask(id, newStatus);
-    }
+
 
 }

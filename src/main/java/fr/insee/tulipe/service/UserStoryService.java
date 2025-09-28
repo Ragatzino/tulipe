@@ -1,6 +1,8 @@
 package fr.insee.tulipe.service;
 
+import fr.insee.tulipe.exceptions.UserStoryNotFoundException;
 import fr.insee.tulipe.model.Sprint;
+import fr.insee.tulipe.model.Task;
 import fr.insee.tulipe.model.UserStory;
 import fr.insee.tulipe.repository.UserStoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import java.util.List;
 @Service
 public class UserStoryService {
     UserStoryRepository userStoryRepository;
+    TaskService taskService;
 
     @Autowired
     public UserStoryService(UserStoryRepository userStoryRepository) {
@@ -29,4 +32,16 @@ public class UserStoryService {
     public List<UserStory> findAll() {
         return userStoryRepository.findAll();
     }
+
+    public UserStory findById(Integer id) {
+        return userStoryRepository.findById(id).orElseThrow(() -> new UserStoryNotFoundException("aucune user story en db"));
+    }
+
+    public void addTaskToUserStory(Integer id, Integer taskId) {
+        UserStory userStory = findById(id);
+        Task task = taskService.findById(taskId);
+        userStory.getTasks().add(task);
+        userStoryRepository.save(userStory);
+    }
+
 }
